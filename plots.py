@@ -1,4 +1,5 @@
 import matplotlib.pyplot as plt
+import numpy as np
 
 
 class Plotter:
@@ -18,8 +19,15 @@ class Plotter:
             x,
             y,
             color="black",
-            s=120,
+            s=140,
             zorder=2,
+        )
+        plt.scatter(
+            x,
+            y,
+            color="steelblue",
+            s=100,
+            zorder=3,
         )
 
     def plot_vertices(self):
@@ -28,7 +36,7 @@ class Plotter:
         plt.scatter(
             x,
             y,
-            color="blue",
+            color="steelblue",
             s=60,
             zorder=2,
         )
@@ -44,11 +52,36 @@ class Plotter:
             lw=2,
         )
 
-    def plot_all(self):
+    def plot_group(self):
+        for depo in self.problem_map.depots:
+            color = tuple(np.random.randint(256, size=3) / 256)
+            plt.scatter(
+                depo.x,
+                depo.y,
+                color="black",
+                s=140,
+                zorder=2,
+            )
+            plt.scatter(
+                depo.x,
+                depo.y,
+                color=[color],
+                s=100,
+                zorder=3,
+            )
+            for vertice in self.problem_map.vertices:
+                if vertice.assigned_depo == depo.index:
+                    plt.scatter(
+                        vertice.x,
+                        vertice.y,
+                        color=[color],
+                        s=60,
+                        zorder=3,
+                    )
+
+    def plot_initial_map(self):
         self.plot_depots()
         self.plot_vertices()
-        self.plot_edges()
-        self.show_map()
 
     def show_map(self):
         plt.show()
