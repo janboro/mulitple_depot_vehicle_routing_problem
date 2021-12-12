@@ -1,33 +1,29 @@
 import numpy as np
-from data_types.coordinates import Coordinates
+from data_types.coordinates import Depot, Vertice
 
 
 class MapGenerator:
-    def __init__(self, vertices_number, depots_number):
-        self.depots_number = depots_number
-        self.vertices_number = vertices_number
-        self.map_size = (vertices_number + depots_number) * 10
+    def __init__(self, no_of_vertices, no_of_depots):
+        self.no_of_depots = no_of_depots
+        self.no_of_vertices = no_of_vertices
+        self.map_size = (no_of_vertices + no_of_depots) * 10
         self.depots = []
         self.vertices = []
 
     def generate_depots(self):
-        index = range(self.depots_number)
-        x = np.random.randint(self.map_size, size=self.depots_number)
-        y = np.random.randint(self.map_size, size=self.depots_number)
+        index = range(self.no_of_depots)
+        x = np.random.randint(self.map_size, size=self.no_of_depots)
+        y = np.random.randint(self.map_size, size=self.no_of_depots)
         for i in range(len(index)):
-            depo = Coordinates(
-                index=index[i],
-                x=x[i],
-                y=y[i],
-            )
-            self.depots.append(depo)
+            depot = Depot(index=index[i], x=x[i], y=y[i])
+            self.depots.append(depot)
 
     def generate_vertices(self):
-        index = range(self.vertices_number)
-        x = np.random.randint(self.map_size, size=self.vertices_number)
-        y = np.random.randint(self.map_size, size=self.vertices_number)
+        index = range(self.no_of_vertices)
+        x = np.random.randint(self.map_size, size=self.no_of_vertices)
+        y = np.random.randint(self.map_size, size=self.no_of_vertices)
         for i in range(len(index)):
-            vertice = Coordinates(
+            vertice = Vertice(
                 index=index[i],
                 x=x[i],
                 y=y[i],
