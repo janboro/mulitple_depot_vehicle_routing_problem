@@ -3,10 +3,10 @@ from data_types.coordinates import Depot, Vertice
 
 
 class MapGenerator:
-    def __init__(self, no_of_vertices, no_of_depots):
+    def __init__(self, no_of_vertices, no_of_depots, map_size):
         self.no_of_depots = no_of_depots
         self.no_of_vertices = no_of_vertices
-        self.map_size = (no_of_vertices + no_of_depots) * 10
+        self.map_size = map_size
         self.depots = []
         self.vertices = []
 

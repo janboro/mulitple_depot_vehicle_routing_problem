@@ -6,9 +6,9 @@ class Plotter:
     def __init__(self, VRP, title="MDVRP"):
         self.VRP = VRP
         self.title = title
-        self.initialize_map(title=title)
+        self.initialize_map()
 
-    def initialize_map(self, title):
+    def initialize_map(self):
         plt.figure()
 
     def plot_depots(self):
@@ -42,35 +42,19 @@ class Plotter:
 
     def plot_path(self):
         for depot in self.VRP.depots:
-            # Connecting depot to beggining of path
-            plt.plot(
-                [depot.x, depot.path[0].x],
-                [depot.y, depot.path[0].y],
-                color="C3",
-                zorder=1,
-                lw=2,
-            )
-            # Connecting end of path to depo
-            plt.plot(
-                [depot.x, depot.path[-1].x],
-                [depot.y, depot.path[-1].y],
-                color="C3",
-                zorder=1,
-                lw=2,
-            )
-
-            for i in range(1, len(depot.path)):
-                x1 = depot.path[i - 1].x
-                x2 = depot.path[i].x
-                y1 = depot.path[i - 1].y
-                y2 = depot.path[i].y
-                plt.plot(
-                    [x1, x2],
-                    [y1, y2],
-                    color="C3",
-                    zorder=1,
-                    lw=2,
-                )
+            if depot.path != []:
+                for i in range(len(depot.path) - 1):
+                    x1 = depot.path[i].x
+                    x2 = depot.path[i + 1].x
+                    y1 = depot.path[i].y
+                    y2 = depot.path[i + 1].y
+                    plt.plot(
+                        [x1, x2],
+                        [y1, y2],
+                        color="C3",
+                        zorder=1,
+                        lw=2,
+                    )
 
     def plot_group(self):
         for depot in self.VRP.depots:
