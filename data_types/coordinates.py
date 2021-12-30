@@ -14,6 +14,6 @@ class Depot(BaseModel):
     index: int
     x: int
     y: int
-    assigned_vertices: int = None
+    assigned_vertices: list = []
     path: list = []
     route_cost: float = 0.0

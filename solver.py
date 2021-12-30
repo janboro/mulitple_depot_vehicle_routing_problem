@@ -1,4 +1,5 @@
 import numpy as np
+from data_types.coordinates import Depot, Vertice
 
 
 class MDVRPSolver:
@@ -64,19 +65,21 @@ class MDVRPSolver:
             depot.path.append(depot)
             depot.route_cost = self.get_route_cost(depot)
 
+    def get_insertion_distance(self, node1, middle_node, node2):
+        existing_distance = self.get_distance(node1=node1, node2=node2)
+        distance_to_new_node = self.get_distance(node1=node1, node2=middle_node)
+        distance_from_new_node = self.get_distance(node1=middle_node, node2=node2)
+        insertion_distance = distance_to_new_node + distance_from_new_node - existing_distance
+
+        return insertion_distance
+
     def insert_node_into_cycle(self, cycle: list, new_node):
         min_cycle_distance = float("inf")
-        insertion_point = None
         for i in range(len(cycle) - 1):
-            existing_distance = self.get_distance(node1=cycle[i], node2=cycle[i + 1])
-            distance_to_new_node = self.get_distance(node1=cycle[i], node2=new_node)
-            distance_from_new_node = self.get_distance(node1=new_node, node2=cycle[i + 1])
-            insertion_distance = distance_to_new_node + distance_from_new_node - existing_distance
-
+            insertion_distance = self.get_insertion_distance(node1=cycle[i], middle_node=new_node, node2=cycle[i + 1])
             if insertion_distance < min_cycle_distance:
                 min_cycle_distance = insertion_distance
                 insertion_index = i + 1
-
         cycle.insert(insertion_index, new_node)
         new_node.visited = True
         return cycle
@@ -97,3 +100,47 @@ class MDVRPSolver:
                 cycle = self.insert_node_into_cycle(cycle=cycle, new_node=cycle_nearest_neighbour)
             depot.path = cycle
             depot.route_cost = self.get_route_cost(depot=depot)
+
+    def run_min_max(self):
+        longest_route_depot = None
+        longest_path = 0.0
+        for depot in self.VRP.depots:
+            if depot.route_cost > longest_path:
+                longest_route_depot = depot
+                longest_path = depot.route_cost
+
+        distances = []
+        for i in range(1, len(longest_route_depot.path) - 1):
+            saved_distance = self.get_insertion_distance(
+                node1=longest_route_depot.path[i - 1],
+                middle_node=longest_route_depot.path[i],
+                node2=longest_route_depot.path[i + 1],
+            )
+            distances.append({"vertice": longest_route_depot.path[i], "distance": saved_distance})
+        sorted_distances = sorted(distances, key=lambda dictionary: dictionary["distance"])
+
+        temp_path = [longest_route_depot]
+        temp_assigned_vertices = []
+        longest_saved_distance = sorted_distances.pop()["vertice"]
+
+        for i in range(len(longest_route_depot.path)):
+            vertice = longest_route_depot.path[i]
+            if type(vertice) is not Depot and vertice != longest_saved_distance:
+                temp_path.append(vertice)
+                temp_assigned_vertices.append(vertice)
+        temp_path.append(longest_route_depot)
+
+
+# """
+# Find longest path (depot)
+# Make list of saved distance if vertice will be deleted
+# Sort that list
+
+# for vertice in sorted_list:
+#     take out vetice of longest path
+#     put vertice into another path
+#     if the total distance will be better:
+#         save both paths
+#     else:
+#         reset paths as in beggining of loop
+# """
