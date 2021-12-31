@@ -8,13 +8,12 @@ class MDVRP:
     def __init__(self, no_of_vertices, no_of_depots, map_size):
         self.VRP = MapGenerator(no_of_vertices=no_of_vertices, no_of_depots=no_of_depots, map_size=map_size)
         self.solver = MDVRPSolver(VRP=self.VRP)
-        self.plotter = Plotter(VRP=self.VRP)
+        self.plotter = Plotter(VRP=self.VRP, no_of_depots=no_of_depots)
 
 
 def main():
     # Generating
-    mdvrp = MDVRP(no_of_vertices=200, no_of_depots=8, map_size=1000)
-    mdvrp.VRP.generate_map()
+    mdvrp = MDVRP(no_of_vertices=15, no_of_depots=3, map_size=1000)
 
     # Nearest Neighbour
     mdvrp.solver.assign_vertices_to_depot()
@@ -30,6 +29,7 @@ def main():
     print(f"Nearest Neighbour execution time: {round(NN_end_time - NN_start_time, 6)}")
     print()
 
+    mdvrp.solver.run_min_max(TSP_function=mdvrp.solver.solve_nearest_neighbour)
     # Plotting
     mdvrp.plotter.plot_initial_map()
     mdvrp.plotter.show_map()

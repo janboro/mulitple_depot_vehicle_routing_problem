@@ -9,6 +9,7 @@ class MapGenerator:
         self.map_size = map_size
         self.depots = []
         self.vertices = []
+        self.generate_map()
 
     def generate_depots(self):
         index = range(self.no_of_depots)
