@@ -1,10 +1,13 @@
 import numpy as np
 from data_types.coordinates import Depot, Vertice
+from plots import Plotter
 
 
 class MDVRPSolver:
     def __init__(self, VRP):
         self.VRP = VRP
+        # TODO Remove when screenshots are taken
+        self.plotter = Plotter(VRP=self.VRP, no_of_depots=len(self.VRP.depots))
 
     def reset_solution(self):
         for depot in self.VRP.depots:
@@ -101,34 +104,132 @@ class MDVRPSolver:
             depot.path = cycle
             depot.route_cost = self.get_route_cost(depot=depot)
 
-    def run_min_max(self):
+    def get_depot_with_longest_route(self):
         longest_route_depot = None
         longest_path = 0.0
         for depot in self.VRP.depots:
             if depot.route_cost > longest_path:
                 longest_route_depot = depot
                 longest_path = depot.route_cost
+        return longest_route_depot, longest_path
 
+    def get_vertice_potential_saved_distance(self, depot: Depot):
         distances = []
-        for i in range(1, len(longest_route_depot.path) - 1):
+        for i in range(1, len(depot.path) - 1):
             saved_distance = self.get_insertion_distance(
-                node1=longest_route_depot.path[i - 1],
-                middle_node=longest_route_depot.path[i],
-                node2=longest_route_depot.path[i + 1],
+                node1=depot.path[i - 1],
+                middle_node=depot.path[i],
+                node2=depot.path[i + 1],
             )
-            distances.append({"vertice": longest_route_depot.path[i], "distance": saved_distance})
+            distances.append({"vertice": depot.path[i], "distance": saved_distance})
         sorted_distances = sorted(distances, key=lambda dictionary: dictionary["distance"])
+        return sorted_distances
 
-        temp_path = [longest_route_depot]
-        temp_assigned_vertices = []
-        longest_saved_distance = sorted_distances.pop()["vertice"]
+    def remove_vertice_from_assigned_vertices(self, depot, vertice_to_remove):
+        for i in range(len(depot.assigned_vertices)):
+            if depot.assigned_vertices[i] is vertice_to_remove:
+                del depot.assigned_vertices[i]
+                break
 
-        for i in range(len(longest_route_depot.path)):
-            vertice = longest_route_depot.path[i]
-            if type(vertice) is not Depot and vertice != longest_saved_distance:
-                temp_path.append(vertice)
-                temp_assigned_vertices.append(vertice)
-        temp_path.append(longest_route_depot)
+    def remove_vertice_from_path(self, depot, vertice_to_remove):
+        for i in range(len(depot.path)):
+            if depot.path[i] is vertice_to_remove:
+                del depot.path[i]
+                break
+
+    def get_path_to_insert(self, node_to_insert, longest_route_depot):
+        shortest_distance = float("inf")
+        depot_to_insert = None
+        index_to_insert = None
+        for depot in self.VRP.depots:
+            if depot is not longest_route_depot:
+                for i in range(len(depot.path) - 1):
+                    insertion_distance = self.get_insertion_distance(
+                        node1=depot.path[i],
+                        middle_node=node_to_insert,
+                        node2=depot.path[i + 1],
+                    )
+                    if insertion_distance < shortest_distance:
+                        depot_to_insert = depot
+                        index_to_insert = i
+        return depot_to_insert, index_to_insert
+
+    # TODO Remove when screenshots are taken
+    def plot(self):
+        self.plotter.plot_group()
+        self.plotter.plot_path()
+        self.plotter.show_map()
+
+    def run_min_max(self, TSP_function):
+        """
+        The point of min max is minimize the longest route, so in short it tries to make the routes of similar length
+        """
+        longest_route_depot, longest_route = self.get_depot_with_longest_route()
+        sorted_distances = self.get_vertice_potential_saved_distance(depot=longest_route_depot)
+        vertice_to_move = sorted_distances.pop()["vertice"]
+
+        temp_old_depot_path = longest_route_depot.path.copy()
+        temp_old_depot_assigned_vertices = longest_route_depot.assigned_vertices.copy()
+        temp_old_depot_cost = longest_route_depot.route_cost
+
+        self.plot()
+
+        self.remove_vertice_from_path(depot=longest_route_depot, vertice_to_remove=vertice_to_move)
+        self.plot()
+        self.remove_vertice_from_assigned_vertices(depot=longest_route_depot, vertice_to_remove=vertice_to_move)
+
+        depot_to_insert_vertice, insertion_index = self.get_path_to_insert(
+            node_to_insert=vertice_to_move, longest_route_depot=longest_route_depot
+        )
+        temp_new_depot_path = depot_to_insert_vertice.path.copy()
+        temp_new_depot_assigned_vertices = depot_to_insert_vertice.assigned_vertices.copy()
+        temp_new_depot_cost = depot_to_insert_vertice.route_cost
+
+        depot_to_insert_vertice.path.insert(insertion_index, vertice_to_move)
+        depot_to_insert_vertice.assigned_vertices.append(vertice_to_move)
+
+        self.plot()
+        self.reset_solution()
+        import time
+
+        NN_start_time = time.time()
+        TSP_function()
+        NN_end_time = time.time()
+        NN_total_distance = 0
+        for depot in self.VRP.depots:
+            NN_total_distance += depot.route_cost
+            print(f"Index: {depot.index}, cost: {depot.route_cost}")
+        print(f"Total NN distance: {round(NN_total_distance)}")
+        print(f"Nearest Neighbour execution time: {round(NN_end_time - NN_start_time, 6)}")
+        print()
+
+        new_longest_route_depot, new_longest_route = self.get_depot_with_longest_route()
+        if new_longest_route < longest_route:
+            pass
+        else:
+            longest_route_depot.path = temp_old_depot_path
+            longest_route_depot.route_cost = temp_old_depot_cost
+            longest_route_depot.assigned_vertices = temp_old_depot_assigned_vertices
+
+            depot_to_insert_vertice.path = temp_new_depot_path
+            depot_to_insert_vertice.route_cost = temp_new_depot_cost
+            depot_to_insert_vertice.assigned_vertices = temp_new_depot_assigned_vertices
+        self.plot()
+
+        # temp_path = []
+        # temp_assigned_vertices = []
+
+        # for vertice in longest_route_depot.path:
+        #     if vertice is not longest_saved_distance:
+        #         temp_path.append(vertice)
+        #         if type(vertice) is not Depot:
+        #             temp_assigned_vertices.append(vertice)
+
+        # print(longest_route_depot)
+        # print("----------------")
+        # for depot in self.VRP.depots:
+        #     if depot is longest_route_depot:
+        #         print(depot)
 
 
 # """
