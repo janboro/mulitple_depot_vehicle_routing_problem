@@ -1,0 +1,13 @@
+algorithm,distances
+nearest_insertion,"{'depot_0': 2155, 'depot_1': 3309, 'depot_2': 4080, 'total_distance': 9544}"
+nearest_insertion_min_max,"{'depot_0': 2155, 'depot_1': 3959, 'depot_2': 3889, 'total_distance': 10003}"
+nearest_insertion,"{'depot_0': 4641, 'depot_1': 3489, 'depot_2': 1874, 'total_distance': 10004}"
+nearest_insertion_min_max,"{'depot_0': 3836, 'depot_1': 3806, 'depot_2': 3852, 'total_distance': 11494}"
+nearest_insertion,"{'depot_0': 2233, 'depot_1': 3684, 'depot_2': 3455, 'total_distance': 9372}"
+nearest_insertion_min_max,"{'depot_0': 2233, 'depot_1': 3471, 'depot_2': 3468, 'total_distance': 9172}"
+nearest_insertion,"{'depot_0': 2619, 'depot_1': 2336, 'depot_2': 4920, 'total_distance': 9875}"
+nearest_insertion_min_max,"{'depot_0': 2619, 'depot_1': 4455, 'depot_2': 4421, 'total_distance': 11495}"
+nearest_insertion,"{'depot_0': 3328, 'depot_1': 7384, 'depot_2': 501, 'depot_3': 2316, 'total_distance': 13529}"
+nearest_insertion_min_max,"{'depot_0': 3328, 'depot_1': 5221, 'depot_2': 3770, 'depot_3': 5225, 'total_distance': 17544}"
+nearest_insertion,"{'depot_0': 4178, 'depot_1': 3032, 'depot_2': 1999, 'depot_3': 4458, 'total_distance': 13667}"
+nearest_insertion_min_max,"{'depot_0': 4178, 'depot_1': 3032, 'depot_2': 2936, 'depot_3': 4087, 'total_distance': 14233}"
