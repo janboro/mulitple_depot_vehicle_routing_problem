@@ -56,7 +56,7 @@ def main():
                 data_row.append(nearest_insertion_min_max_distances)
 
                 current_directory = os.path.dirname(os.path.realpath(__file__))
-                csv_file_path = os.path.normpath(os.path.join(current_directory, "MDVRP_benchmark.csv"))
+                csv_file_path = os.path.normpath(os.path.join(current_directory, "benchmark_data/MDVRP_benchmark.csv"))
                 with open(csv_file_path, "a") as f:
                     write = csv.writer(f)
                     write.writerow(data_row)

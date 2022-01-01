@@ -3,10 +3,8 @@ import numpy as np
 
 
 class Plotter:
-    def __init__(self, VRP, no_of_depots, title="MDVRP"):
+    def __init__(self, VRP, no_of_depots):
         self.VRP = VRP
-        self.title = title
-        self.no_of_depots = no_of_depots
         self.colors = self.generate_colors(no_of_depots=no_of_depots)
 
     def generate_colors(self, no_of_depots):
@@ -90,7 +88,7 @@ class Plotter:
         self.plot_depots()
         self.plot_vertices()
 
-    def show_map(self):
-        plt.title(self.title)
+    def show_map(self, title="MDVRP"):
+        plt.title(title)
         plt.axis("off")
         plt.show()
