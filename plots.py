@@ -1,48 +1,59 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+from data_types.coordinates import Depot, Vertice
+from map_generator import Map
+
 
 class Plotter:
-    def __init__(self, VRP, no_of_depots):
-        self.VRP = VRP
-        self.colors = self.generate_colors(no_of_depots=no_of_depots)
+    def __init__(self, VRP: Map, no_of_depots: int) -> None:
+        self.VRP: Map = VRP
+        self.colors: list[tuple[int, int, int]] = self.generate_colors(no_of_depots=no_of_depots)
 
-    def generate_colors(self, no_of_depots):
+    def generate_colors(self, no_of_depots: int) -> list[tuple[int, int, int]]:
         colors = []
         for _ in range(no_of_depots):
             colors.append(tuple(np.random.randint(256, size=3) / 256))
         return colors
 
-    def plot_depots(self):
-        x = [depot.x for depot in self.VRP.depots]
-        y = [depot.y for depot in self.VRP.depots]
+    def plot_depots(self) -> None:
+        x: list[int] = [depot.x for depot in self.VRP.depots]
+        y: list[int] = [depot.y for depot in self.VRP.depots]
         plt.scatter(
             x,
             y,
             color="black",
-            s=140,
+            s=180,
             zorder=2,
         )
         plt.scatter(
             x,
             y,
             color="steelblue",
-            s=100,
+            s=140,
             zorder=3,
         )
 
-    def plot_vertices(self):
-        x = [vertice.x for vertice in self.VRP.vertices]
-        y = [vertice.y for vertice in self.VRP.vertices]
+    def plot_vertices(self) -> None:
+        x: list[int] = [vertice.x for vertice in self.VRP.vertices]
+        y: list[int] = [vertice.y for vertice in self.VRP.vertices]
         plt.scatter(
             x,
             y,
-            color="steelblue",
+            color="lightgray",
             s=60,
+            zorder=3,
+        )
+        plt.scatter(
+            x,
+            y,
+            color="black",
+            s=100,
             zorder=2,
         )
 
-    def plot_path(self):
+    def plot_path(self) -> None:
+        depot: Depot
         for depot in self.VRP.depots:
             if depot.path != []:
                 for i in range(len(depot.path) - 1):
@@ -58,7 +69,8 @@ class Plotter:
                         lw=2,
                     )
 
-    def plot_group(self):
+    def plot_group(self) -> None:
+        depot: Depot
         for depot in self.VRP.depots:
             color = self.colors[depot.index]
             plt.scatter(
@@ -75,6 +87,7 @@ class Plotter:
                 s=100,
                 zorder=3,
             )
+            vertice: Vertice
             for vertice in depot.assigned_vertices:
                 plt.scatter(
                     vertice.x,
@@ -84,11 +97,11 @@ class Plotter:
                     zorder=3,
                 )
 
-    def plot_initial_map(self):
+    def plot_initial_map(self) -> None:
         self.plot_depots()
         self.plot_vertices()
 
-    def show_map(self, title="MDVRP"):
+    def show_map(self, title: str = "MDVRP") -> None:
         plt.title(title)
         plt.axis("off")
         plt.show()

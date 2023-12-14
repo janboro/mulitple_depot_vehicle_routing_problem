@@ -1,6 +1,5 @@
 # pylint: disable=too-few-public-methods
 from pydantic import BaseModel
-from typing import Optional
 
 
 class Vertice(BaseModel):
@@ -15,5 +14,5 @@ class Depot(BaseModel):
     x: int
     y: int
     assigned_vertices: list = []
-    path: list = []
+    path: list[Vertice] = []
     route_cost: float = 0.0
