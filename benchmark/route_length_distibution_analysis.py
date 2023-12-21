@@ -1,7 +1,11 @@
 import matplotlib.pyplot as plt
 
+"""
+This is the visualization of the Benchmarking results before using the Min Max algorithm and after, comparing the route length distributions.
+The analysis was conducted on the Nearest Insertion Algorithm.
+"""
 
-initial_solution = {
+initial_solution: dict[str, int] = {
     "depot_0": 3736,
     "depot_1": 2282,
     "depot_2": 1374,
@@ -13,7 +17,7 @@ initial_solution = {
     "depot_8": 1499,
     "depot_9": 3829,
 }
-final_solution = {
+final_solution: dict[str, int] = {
     "depot_0": 3736,
     "depot_1": 2282,
     "depot_2": 1374,
@@ -28,11 +32,11 @@ final_solution = {
 
 plt.figure()
 plt.bar(x=range(len(initial_solution)), height=initial_solution.values())
-plt.title("Nearest Insertion")
+plt.title("Nearest Insertion route lengths")
 plt.ylim(0, 6100)
 
 plt.figure()
 plt.bar(x=range(len(final_solution)), height=final_solution.values())
 plt.ylim(0, 6100)
-plt.title("Nearest Insertion after Min Max")
+plt.title("Nearest Insertion Min Max route lengths")
 plt.show()

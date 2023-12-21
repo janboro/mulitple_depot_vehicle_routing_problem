@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 from data_types.coordinates import Depot, Vertice
-from map_generator import Map
+from MDVRP.map_generator import Map
 
 
-class Plotter:
+class MDVRPPlotter:
     def __init__(self, VRP: Map, no_of_depots: int) -> None:
         self.VRP: Map = VRP
         self.colors: list[tuple[int, int, int]] = self.generate_colors(no_of_depots=no_of_depots)

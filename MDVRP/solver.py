@@ -3,7 +3,7 @@ from typing import Callable
 import numpy as np
 
 from data_types.coordinates import Depot, Vertice
-from map_generator import Map
+from MDVRP.map_generator import Map
 
 
 class MDVRPSolver:

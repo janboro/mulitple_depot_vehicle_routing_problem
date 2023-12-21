@@ -1,9 +1,14 @@
-from MDVRP import MDVRP
+from MDVRP.MDVRP import MDVRP
+from config.config_handler import get_MDVRP_params
 
 
 def main() -> None:
+    # Loading parameters
+    params: dict[str, int] = get_MDVRP_params()
     # Generating map for the problem
-    mdvrp: MDVRP = MDVRP(no_of_vertices=500, no_of_depots=10, map_size=1000)
+    mdvrp: MDVRP = MDVRP(
+        no_of_vertices=params["no_of_vertices"], no_of_depots=params["no_of_depots"], map_size=params["map_size"]
+    )
 
     # Solving the routing problem with the Nearest Neighbour algorithm
     mdvrp.solver.assign_vertices_to_depot()

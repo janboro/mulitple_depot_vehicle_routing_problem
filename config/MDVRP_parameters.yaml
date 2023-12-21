@@ -1,0 +1,4 @@
+---
+no_of_depots: 10
+no_of_vertices: 500
+map_size: 1000 # The map is a square
